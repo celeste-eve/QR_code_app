@@ -32,7 +32,7 @@ class _LandingPageState extends State<Landingpage> {
                     pressme(PageOne());
                   },
                   child: const Text(
-                    'Page One',
+                    'Generate standard 2 line QR code',
                     style: TextStyle(
                       fontSize: 20,
                       color: Color.fromARGB(255, 53, 14, 59),
@@ -51,7 +51,7 @@ class _LandingPageState extends State<Landingpage> {
                     pressme(PageTwo());
                   },
                   child: const Text(
-                    'Page Two',
+                    'Generate multi line QR code',
                     style: TextStyle(
                       fontSize: 20,
                       color: Color.fromARGB(255, 53, 14, 59),

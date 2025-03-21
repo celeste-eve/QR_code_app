@@ -110,10 +110,11 @@ class _PageOneState extends State<PageOne> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Make a standard QR code PDF',
+              'Make a standard QR code PDF Example: ',
               style: TextStyle(fontSize: 30),
               textAlign: TextAlign.center,
             ),
+            Image.asset('assets/images/StandardQRcode.png', height: 200),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
