@@ -54,6 +54,7 @@ class _PageOneState extends State<PageOne> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('PDF saved successfully!'),
+            duration: Duration(seconds: 20), //duration
             action: SnackBarAction(
               label: 'Open',
               onPressed: () => openFile(outputPath),
@@ -104,7 +105,16 @@ class _PageOneState extends State<PageOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Page One')),
+      appBar: AppBar(
+        title: Text('Page One'),
+        backgroundColor: const Color.fromARGB(255, 232, 216, 252),
+        leading: IconButton(
+          icon: Icon(Icons.home),
+          onPressed: () {
+            Navigator.pop(context); // Navigate back to the previous screen
+          },
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
