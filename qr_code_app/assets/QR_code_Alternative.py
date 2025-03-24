@@ -49,35 +49,42 @@ def add_qr_to_pdf(strings, filename):
         img_reader = ImageReader(qr_stream)
         
         c.drawImage(img_reader, 0, 0, width=2*inch, height=2*inch)
-        # splits text into 3 lines
-        def format_text(s):
+
+        """Splits the location string into three meaningful parts."""
+        parts = s.split()
+
+        if len(parts) > 6:
+            # splits text into 3 lines
             """Splits the location string into three meaningful parts."""
             parts = s.split()
 
-            if len(parts) > 6:
-                first_line = f"{parts[0]} {parts[1]} {parts[2]}"  # Example: "C1 BAY"
-                second_line = f"{parts[3]} {parts[4]}"  # Example: "1 SHELF"
-                third_line = f"{parts[5]} {parts[6]}" if len(parts) > 6 else parts[5]  # Example: "3 PALLET A"
+            first_line = f"{parts[0]} {parts[1]} {parts[2]}"  # Example: "C1 BAY"
+            second_line = f"{parts[3]} {parts[4]}"  # Example: "1 SHELF"
+            third_line = f"{parts[5]} {parts[6]}" if len(parts) > 6 else parts[5]  # Example: "3 PALLET A"
 
-                # Set fixed x position at 2.1 inches (just after QR code)
-                x_position = 2.1*inch
+            # Set fixed x position at 2.1 inches (just after QR code)
+            x_position = 2.1*inch
             
-                # Draw both lines with fixed left alignment
-                c.drawString(x_position, 1.5*inch, first_line)
-                c.drawString(x_position, 1.0*inch, second_line)
-                c.drawString(x_position, 0.5*inch, third_line)
-            else:
-                first_line = f"{parts[0]} {parts[1]} {parts[2]}"  # Example: "C1 BAY 1"
-                second_line = f"{parts[3]}"  # Example: "SHELF"
-                third_line = f"{parts[4]} {parts[5]}"  # Example: "PALLET A"
+            # Draw both lines with fixed left alignment
+            c.drawString(x_position, 1.5*inch, first_line)
+            c.drawString(x_position, 1.0*inch, second_line)
+            c.drawString(x_position, 0.5*inch, third_line)
+        else:
+            # splits text into 3 lines
+            """Splits the location string into three meaningful parts."""
+            parts = s.split()
+
+            first_line = f"{parts[0]} {parts[1]} {parts[2]}"  # Example: "C1 BAY 1"
+            second_line = f"{parts[3]}"  # Example: "SHELF"
+            third_line = f"{parts[4]} {parts[5]}"  # Example: "PALLET A"
                 
-                # Set fixed x position at 2.1 inches (just after QR code)
-                x_position = 2.1*inch
+            # Set fixed x position at 2.1 inches (just after QR code)
+            x_position = 2.1*inch
             
-                # Draw both lines with fixed left alignment
-                c.drawString(x_position, 1.5*inch, first_line)
-                c.drawString(x_position, 1.0*inch, second_line)
-                c.drawString(x_position, 0.5*inch, third_line)
+            # Draw both lines with fixed left alignment
+            c.drawString(x_position, 1.5*inch, first_line)
+            c.drawString(x_position, 1.0*inch, second_line)
+            c.drawString(x_position, 0.5*inch, third_line)
 
         c.showPage()
     c.save()

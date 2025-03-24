@@ -12,11 +12,25 @@ class _PageOneState extends State<PageOne> {
   final TextEditingController _textController = TextEditingController();
   bool isLoading = false;
   String? lastGeneratedPdfPath;
+  List<String> qrCodeEntries = []; // List to store multiple QR code data
 
-  Future<void> generateQRCodePdf(String data) async {
-    if (data.isEmpty) {
+  void addEntry(String data) {
+    if (data.isNotEmpty) {
+      setState(() {
+        qrCodeEntries.add(data);
+      });
+      _textController.clear();
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please enter a valid location')));
+    }
+  }
+
+  Future<void> generateQRCodePdf() async {
+    if (qrCodeEntries.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a location for the QR code')),
+        SnackBar(content: Text('Please add at least one location')),
       );
       return;
     }
@@ -26,7 +40,6 @@ class _PageOneState extends State<PageOne> {
     });
 
     try {
-      // Get the Downloads directory to save the PDF
       final directory = await getDownloadsDirectory();
       if (directory == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -34,16 +47,18 @@ class _PageOneState extends State<PageOne> {
         );
         return;
       }
-      final sanitizedName = data.replaceAll(RegExp(r'[^\w\s]'), '_').trim();
-      final outputPath = '${directory.path}/${sanitizedName}_QRcode.pdf';
 
-      // Execute Python script
+      final outputPath = '${directory.path}/Multiple_QRcodes.pdf';
+
+      // Execute Python script for multiple QR codes
       final result = await Process.run('python', [
-        'assets\\QR_code_gen.py', // path to Python script
-        '--data', data,
-        '--output', outputPath,
+        'assets\\QR_code_gen.py',
+        '--data',
+        qrCodeEntries.join(','), // Pass all entries as a single string
+        '--output',
+        outputPath,
         '--mode',
-        'single_pdf',
+        'multiple_pdf',
       ]);
 
       if (result.exitCode == 0) {
@@ -53,8 +68,8 @@ class _PageOneState extends State<PageOne> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('PDF saved successfully!'),
-            duration: Duration(seconds: 20), //duration
+            content: Text('PDF with multiple QR codes saved successfully!'),
+            duration: Duration(seconds: 20),
             action: SnackBarAction(
               label: 'Open',
               onPressed: () => openFile(outputPath),
@@ -135,11 +150,36 @@ class _PageOneState extends State<PageOne> {
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () => addEntry(_textController.text),
+              child: Text('Add Location'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: qrCodeEntries.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(qrCodeEntries[index]),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          qrCodeEntries.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
             isLoading
                 ? CircularProgressIndicator()
-                : ElevatedButton(
-                  onPressed: () => generateQRCodePdf(_textController.text),
-                  child: Text('Generate QR code PDF'),
+                : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                    onPressed: generateQRCodePdf,
+                    child: Text('Generate QR code PDF'),
+                  ),
                 ),
           ],
         ),

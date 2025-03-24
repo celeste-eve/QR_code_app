@@ -108,12 +108,30 @@ class _PageTwoState extends State<PageTwo> {
       appBar: AppBar(
         title: Text('Page Two'),
         backgroundColor: const Color.fromARGB(255, 232, 216, 252),
-        leading: IconButton(
-          icon: Icon(Icons.home),
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
-          },
-        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help_outline),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Help'),
+                    content: Text(
+                      'Enter a location for the QR code and click the "Generate QR code PDF" button to create a PDF with the QR code. This can be used to create QR codes with 3 lines of text',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Close'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
