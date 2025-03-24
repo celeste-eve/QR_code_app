@@ -18,12 +18,15 @@ class _LandingPageState extends State<Landingpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('QR code app')),
+      appBar: AppBar(
+        title: const Text('QR code app'),
+        backgroundColor: const Color.fromARGB(255, 232, 216, 252),
+      ),
       body: Center(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(15.0),
               child: SizedBox(
                 width: 1000,
                 height: 100,
@@ -32,7 +35,7 @@ class _LandingPageState extends State<Landingpage> {
                     pressme(PageOne());
                   },
                   child: const Text(
-                    'Generate standard 2 line QR code',
+                    'Generate standard 1 or 2 line QR code',
                     style: TextStyle(
                       fontSize: 20,
                       color: Color.fromARGB(255, 53, 14, 59),
@@ -42,7 +45,7 @@ class _LandingPageState extends State<Landingpage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(15.0),
               child: SizedBox(
                 width: 1000,
                 height: 100,
@@ -51,7 +54,7 @@ class _LandingPageState extends State<Landingpage> {
                     pressme(PageTwo());
                   },
                   child: const Text(
-                    'Generate multi line QR code',
+                    'Generate multi line QR code UNDER CONSTRUCTION',
                     style: TextStyle(
                       fontSize: 20,
                       color: Color.fromARGB(255, 53, 14, 59),

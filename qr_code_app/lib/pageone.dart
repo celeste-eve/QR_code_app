@@ -40,14 +40,9 @@ class _PageOneState extends State<PageOne> {
     });
 
     try {
-      final directory = await getDownloadsDirectory();
-      if (directory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Unable to access Downloads directory')),
-        );
-        return;
-      }
-
+      // Change the save location here
+      final directory =
+          await getApplicationDocumentsDirectory(); // Use Documents directory
       final outputPath = '${directory.path}/Multiple_QRcodes.pdf';
 
       // Execute Python script for multiple QR codes
@@ -69,7 +64,7 @@ class _PageOneState extends State<PageOne> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('PDF with multiple QR codes saved successfully!'),
-            duration: Duration(seconds: 20),
+            duration: Duration(seconds: 100),
             action: SnackBarAction(
               label: 'Open',
               onPressed: () => openFile(outputPath),
@@ -121,14 +116,33 @@ class _PageOneState extends State<PageOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Page One'),
+        title: Text('Page Two'),
         backgroundColor: const Color.fromARGB(255, 232, 216, 252),
-        leading: IconButton(
-          icon: Icon(Icons.home),
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
-          },
-        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help_outline),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Help'),
+                    content: Text(
+                      'Enter a location for the QR code and click the "Add Location" button, once you have added all of the locations you want QR codes for then press "Generate QR code PDF" to generate the file.  This can be used to create QR codes with 1 or 2 lines of text',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Close'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -152,7 +166,7 @@ class _PageOneState extends State<PageOne> {
             ),
             ElevatedButton(
               onPressed: () => addEntry(_textController.text),
-              child: Text('Add Location'),
+              child: Text('Add Location', style: TextStyle(fontSize: 20)),
             ),
             Expanded(
               child: ListView.builder(
@@ -178,7 +192,10 @@ class _PageOneState extends State<PageOne> {
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton(
                     onPressed: generateQRCodePdf,
-                    child: Text('Generate QR code PDF'),
+                    child: Text(
+                      'Generate QR code PDF',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
           ],
