@@ -4,8 +4,13 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 import io
 import argparse
+import os
+import logging
 
-# same as OG
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def create_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
@@ -22,8 +27,6 @@ def create_qr_code(data):
     img_byte_arr.seek(0)
     return img_byte_arr
 
-
-# same as OG
 def save_single_qr(data, output_path):
     """Generate a single QR code and save it as PNG"""
     qr = qrcode.QRCode(
@@ -37,9 +40,7 @@ def save_single_qr(data, output_path):
     img = qr.make_image(fill_color="black", back_color="white")
     img.save(output_path)
     return output_path
-
-
-# same as OG    
+  
 def add_qr_to_pdf(strings, filename):
     c = canvas.Canvas(filename, pagesize=(4*inch, 2*inch))
     font_size = 16
@@ -102,7 +103,7 @@ if __name__ == "__main__":
     parser.add_argument('--data', help='Data to encode in single QR code')
     parser.add_argument('--output', help='Output file path')
     parser.add_argument('--mode', default='single', choices=['single', 'pdf', 'single_pdf'], 
-                      help='Mode: single QR code, PDF with multiple codes, or PDF with single code')
+    help='Mode: single QR code, PDF with multiple codes, or PDF with single code')
     
     args = parser.parse_args()
     

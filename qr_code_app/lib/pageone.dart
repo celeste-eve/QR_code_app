@@ -116,7 +116,7 @@ class _PageOneState extends State<PageOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Page Two'),
+        title: Text('Page One'),
         backgroundColor: const Color.fromARGB(255, 232, 216, 252),
         actions: [
           IconButton(

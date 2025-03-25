@@ -131,6 +131,42 @@ def create_multiple_qr_pdf(data_string, output_path):
         add_qr_to_pdf(locations, backup_path)
         return backup_path
 
+def generate_qr_codes(data_list, output_path):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    x, y = 10, 10  # Starting position for QR codes
+    qr_size = 40   # Size of each QR code
+
+    for data in data_list:
+        # Generate QR code
+        qr = qrcode.QRCode(box_size=10, border=2)
+        qr.add_data(data)
+        qr.make(fit=True)
+        qr_img = qr.make_image(fill="black", back_color="white")
+        qr_img_path = f"temp_{data}.png"
+        qr_img.save(qr_img_path)
+
+        # Add QR code to PDF
+        pdf.image(qr_img_path, x=x, y=y, w=qr_size, h=qr_size)
+        pdf.set_xy(x, y + qr_size + 2)
+        pdf.cell(w=qr_size, h=10, txt=data, border=0, ln=1, align='C')
+
+        # Update position for the next QR code
+        x += qr_size + 10
+        if x + qr_size > 190:  # Move to the next row if exceeding page width
+            x = 10
+            y += qr_size + 20
+            if y + qr_size > 270:  # Add a new page if exceeding page height
+                pdf.add_page()
+                y = 10
+
+    # Save the PDF
+    pdf.output(output_path)
+    print(f"PDF saved at {output_path}")
+
 if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser(description='Generate QR Code or PDF')
@@ -157,6 +193,10 @@ if __name__ == "__main__":
             # Generate a PDF with multiple QR codes from comma-separated locations
             output_path = create_multiple_qr_pdf(args.data, args.output)
             print(output_path)  # Print the path so Flutter can capture it
+        elif args.mode == 'pdf' and args.data and args.output:
+            # Generate a PDF with multiple QR codes
+            data_list = args.data.split(",")
+            generate_qr_codes(data_list, args.output)
     except Exception as e:
         logger.error(f"Error in main: {str(e)}")
         print(f"Error: {str(e)}")
