@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PageTwo extends StatefulWidget {
   @override
@@ -41,53 +43,36 @@ class _PageTwoState extends State<PageTwo> {
     });
 
     try {
-      // Use a temporary directory instead of OneDrive
-      final directory = await getTemporaryDirectory();
-      final outputPath = p.normalize('${directory.path}/Racking_QR_Codes.pdf');
+      final url = Uri.parse('http://localhost:62215/'); // Flask server endpoint
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'data': qrCodeEntries.join(',')}),
+      );
 
-      // Log the output path for debugging
-      print('Attempting to save PDF at: $outputPath');
-
-      // Execute Python script
-      final result = await Process.run('python', [
-        'assets\\QR_code_Alternative.py',
-        '--data',
-        qrCodeEntries.join(','),
-        '--output',
-        outputPath,
-        '--mode',
-        'multiple_pdf',
-      ]);
-
-      // Log Python script output
-      print('Python script stdout: ${result.stdout}');
-      print('Python script stderr: ${result.stderr}');
-
-      if (result.exitCode == 0) {
+      if (response.statusCode == 200) {
+        // Save the PDF file locally
+        final directory = await getTemporaryDirectory();
+        final outputPath = p.join(directory.path, 'Racking_QR_Codes.pdf');
         final file = File(outputPath);
-        if (file.existsSync()) {
-          setState(() {
-            lastGeneratedPdfPath = outputPath;
-          });
+        await file.writeAsBytes(response.bodyBytes);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('PDF saved successfully!'),
-              duration: Duration(seconds: 100),
-              action: SnackBarAction(
-                label: 'Open',
-                onPressed: () => openFile(outputPath),
-              ),
+        setState(() {
+          lastGeneratedPdfPath = outputPath;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('PDF saved successfully!'),
+            action: SnackBarAction(
+              label: 'Open',
+              onPressed: () => openFile(outputPath),
             ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('PDF file not found after creation.')),
-          );
-        }
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error generating PDF: ${result.stderr}')),
+          SnackBar(content: Text('Error generating PDF: ${response.body}')),
         );
       }
     } catch (e) {
@@ -221,7 +206,9 @@ class _PageTwoState extends State<PageTwo> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: ElevatedButton(
-                        onPressed: generateQRCodePdf,
+                        onPressed: () {
+                          generateQRCodePdf();
+                        },
                         child: Text(
                           'Generate QR code PDF',
                           style: TextStyle(fontSize: 20),
