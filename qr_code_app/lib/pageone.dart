@@ -148,10 +148,13 @@ class _PageOneState extends State<PageOne> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Make a standard QR code PDF Example: ',
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'Make a standard QR code PDF Example: ',
+                style: TextStyle(fontSize: 30),
+                textAlign: TextAlign.center,
+              ),
             ),
             Image.asset('assets/images/StandardQRcode.png', height: 200),
             Padding(
@@ -188,15 +191,28 @@ class _PageOneState extends State<PageOne> {
             ),
             isLoading
                 ? CircularProgressIndicator()
-                : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    onPressed: generateQRCodePdf,
-                    child: Text(
-                      'Generate QR code PDF',
-                      style: TextStyle(fontSize: 20),
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: generateQRCodePdf,
+                        child: Text(
+                          'Generate QR code PDF',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
                     ),
-                  ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          qrCodeEntries.clear();
+                        });
+                      },
+                      child: Text('Clear List', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
                 ),
           ],
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path/path.dart' as p; // Add this import for path normalization
+import 'package:path/path.dart' as p;
 
 class PageTwo extends StatefulWidget {
   @override
@@ -152,7 +152,7 @@ class _PageTwoState extends State<PageTwo> {
                   return AlertDialog(
                     title: Text('Help'),
                     content: Text(
-                      'Enter a location for the QR code and click the "Add Location" button, once you have added all of the locations you want QR codes for then press "Generate QR code PDF" to generate the file.  This can be used to create QR codes with 3 lines of text',
+                      'Enter a location for the QR codes seperated by a , and click the "Add Location" button, once you have added all of the locations you want QR codes for then press "Generate QR code PDF" to generate the file.  This can be used to create QR codes with 3 lines of text',
                       style: TextStyle(fontSize: 20),
                     ),
                     actions: [
@@ -215,15 +215,28 @@ class _PageTwoState extends State<PageTwo> {
             ),
             isLoading
                 ? CircularProgressIndicator()
-                : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    onPressed: generateQRCodePdf,
-                    child: Text(
-                      'Generate QR code PDF',
-                      style: TextStyle(fontSize: 20),
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: generateQRCodePdf,
+                        child: Text(
+                          'Generate QR code PDF',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
                     ),
-                  ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          qrCodeEntries.clear();
+                        });
+                      },
+                      child: Text('Clear List', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
                 ),
           ],
         ),

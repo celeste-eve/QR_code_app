@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_app/pageone.dart';
 import 'package:qr_code_app/pagetwo.dart';
+import 'package:qr_code_app/pagethree.dart';
 
 class Landingpage extends StatefulWidget {
   const Landingpage({super.key});
@@ -54,7 +55,26 @@ class _LandingPageState extends State<Landingpage> {
                     pressme(PageTwo());
                   },
                   child: const Text(
-                    'Generate multi line QR code UNDER CONSTRUCTION',
+                    'Generate multi line QR codes for RACKING BEAMS',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 53, 14, 59),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SizedBox(
+                width: 1000,
+                height: 100,
+                child: ElevatedButton(
+                  onPressed: () {
+                    pressme(PageThree());
+                  },
+                  child: const Text(
+                    'UNDER CONSTRUCTION ',
                     style: TextStyle(
                       fontSize: 20,
                       color: Color.fromARGB(255, 53, 14, 59),
