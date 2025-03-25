@@ -63,7 +63,7 @@ class _PageOneState extends State<PageOne> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('PDF with multiple QR codes saved successfully!'),
+            content: Text('PDF saved successfully!'),
             duration: Duration(seconds: 100),
             action: SnackBarAction(
               label: 'Open',

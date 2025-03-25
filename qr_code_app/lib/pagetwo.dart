@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as p; // Add this import for path normalization
 
 class PageTwo extends StatefulWidget {
   @override
@@ -40,54 +41,60 @@ class _PageTwoState extends State<PageTwo> {
     });
 
     try {
-      // Change the save location here
-      final directory =
-          await getApplicationDocumentsDirectory(); // Use Documents directory
-      final outputPath = '${directory.path}/Multiple_QRcodes1.pdf';
+      // Use a temporary directory instead of OneDrive
+      final directory = await getTemporaryDirectory();
+      final outputPath = p.normalize('${directory.path}/Racking_QR_Codes.pdf');
+
+      // Log the output path for debugging
+      print('Attempting to save PDF at: $outputPath');
 
       // Execute Python script
       final result = await Process.run('python', [
-        'assets\\QR_code_Alternative.py', // path to Python script
+        'assets\\QR_code_Alternative.py',
         '--data',
-        qrCodeEntries.join(','), // Pass all entries as a single string
+        qrCodeEntries.join(','),
         '--output',
         outputPath,
         '--mode',
-        'pdf', // Changed from 'multiple_pdf' to 'pdf'
+        'multiple_pdf',
       ]);
 
-      if (result.exitCode == 0) {
-        setState(() {
-          lastGeneratedPdfPath = outputPath;
-        });
+      // Log Python script output
+      print('Python script stdout: ${result.stdout}');
+      print('Python script stderr: ${result.stderr}');
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('PDF saved successfully!'),
-            duration: Duration(seconds: 100), //duration
-            action: SnackBarAction(
-              label: 'Open',
-              onPressed: () => openFile(outputPath),
+      if (result.exitCode == 0) {
+        final file = File(outputPath);
+        if (file.existsSync()) {
+          setState(() {
+            lastGeneratedPdfPath = outputPath;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('PDF saved successfully!'),
+              duration: Duration(seconds: 100),
+              action: SnackBarAction(
+                label: 'Open',
+                onPressed: () => openFile(outputPath),
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('PDF file not found after creation.')),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error generating PDF: ${result.stderr}'),
-            duration: Duration(seconds: 100),
-          ),
+          SnackBar(content: Text('Error generating PDF: ${result.stderr}')),
         );
-        print('Error: ${result.stderr}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Exception: $e'),
-          duration: Duration(seconds: 100),
-        ),
-      );
-      print('Exception: $e');
+      print('Exception during PDF generation: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Exception: $e')));
     } finally {
       setState(() {
         isLoading = false;
@@ -98,34 +105,28 @@ class _PageTwoState extends State<PageTwo> {
   // Open a file using the open_file package
   Future<void> openFile(String path) async {
     try {
-      final result = await OpenFile.open(path);
-      if (result.type == ResultType.done) {
-        setState(() {
-          qrCodeEntries
-              .clear(); // Clear the memory after successfully opening the file
-        });
+      final normalizedPath = p.normalize(path); // Normalize path
+      print('Opening file at normalized path: $normalizedPath'); // Log path
+
+      final file = File(normalizedPath);
+      if (!file.existsSync()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('File opened successfully!'),
-            duration: Duration(seconds: 20),
-          ),
+          SnackBar(content: Text('File not found at path: $normalizedPath')),
         );
-      } else {
+        return;
+      }
+
+      final result = await OpenFile.open(normalizedPath);
+      if (result.type != ResultType.done) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to open file: ${result.message}'),
-            duration: Duration(seconds: 20),
-          ),
+          SnackBar(content: Text('Failed to open file: ${result.message}')),
         );
       }
     } catch (e) {
       print('Error opening file: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error opening file: $e'),
-          duration: Duration(seconds: 20),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error opening file: $e')));
     }
   }
 

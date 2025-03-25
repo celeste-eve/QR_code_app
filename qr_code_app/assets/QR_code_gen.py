@@ -6,6 +6,7 @@ import io
 import argparse
 import os
 import logging
+from fpdf import FPDF
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
