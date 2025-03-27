@@ -48,9 +48,20 @@ class _PageTwoState extends State<PageTwo> {
       // Log the output path for debugging
       print('Attempting to save PDF at: $outputPath');
 
+      // Install dependencies if needed - for downloaded version
+      await Process.run('python', ['-m', 'pip', 'install', '--upgrade', 'pip']);
+      await Process.run('python', [
+        '-m',
+        'pip',
+        'install',
+        'qrcode',
+        'reportlab',
+        'fpdf',
+      ]);
+
       // Execute Python script
       final result = await Process.run('python', [
-        'assets\\QR_code_Alternative.py',
+        'data\\flutter_assets\\assets\\QR_code_Alternative.py', //changes for downloaded version
         '--data',
         qrCodeEntries.join(','),
         '--output',

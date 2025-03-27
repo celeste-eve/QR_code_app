@@ -45,9 +45,20 @@ class _PageOneState extends State<PageOne> {
           await getApplicationDocumentsDirectory(); // Use Documents directory
       final outputPath = '${directory.path}/Multiple_QRcodes.pdf';
 
+      // Install dependencies if needed - for downloaded version
+      await Process.run('python', ['-m', 'pip', 'install', '--upgrade', 'pip']);
+      await Process.run('python', [
+        '-m',
+        'pip',
+        'install',
+        'qrcode',
+        'reportlab',
+        'fpdf',
+      ]);
+
       // Execute Python script for multiple QR codes
       final result = await Process.run('python', [
-        'assets\\QR_code_gen.py',
+        'data\\flutter_assets\\assets\\QR_code_gen.py', //changes for downloaded version
         '--data',
         qrCodeEntries.join(','), // Pass all entries as a single string
         '--output',
