@@ -139,9 +139,39 @@ class _qrcodesState extends State<qrcodes> {
                 builder: (context) {
                   return AlertDialog(
                     title: Text('Help'),
-                    content: Text(
-                      'Enter a location for the QR code and select the type for QR code your making then click the "Add Location" button, once you have added all of the locations you want QR codes for then press "Generate QR code PDF" to generate the file.',
-                      style: TextStyle(fontSize: 20),
+                    content: Column(
+                      children: [
+                        Text(
+                          'Enter a location for the QR code and select the type for QR code your making then click the "Add Location" button, once you have added all of the locations you want QR codes for then press "Generate QR code PDF" to generate the file.',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Example of Pallet QR code',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Image.asset(
+                                  'assets/images/StandardQRcode.png',
+                                  height: 200,
+                                ),
+                                Text(
+                                  'Example of Racking beam QR code',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Image.asset(
+                                  'assets/images/3LineQRcode.png',
+                                  height: 200,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     actions: [
                       TextButton(

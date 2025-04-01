@@ -77,7 +77,14 @@ def add_qr_to_pdf(strings, filename):
 
             # Add text next to the QR code
             x_position = 2.1 * inch
-            c.drawString(x_position, 1.5 * inch, s)
+            if "PLT" in s:
+                # Split the string into two parts and display them on separate lines
+                parts = s.split("PLT", 1)
+                c.drawString(x_position, 1.2 * inch, parts[0].strip())
+                c.drawString(x_position, 0.8 * inch, "PLT" + parts[1].strip())
+            else:
+                c.drawString(x_position, 1.0 * inch, s)
+            
             c.showPage()
         except Exception as e:
             logger.error(f"Error processing QR code: {str(e)}")
