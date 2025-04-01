@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_app/landingpage.dart';
+import 'package:qr_code_app/landingpageQRcode.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -8,13 +8,13 @@ class MyApp extends StatelessWidget {
       // title: 'QR code app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromARGB(255, 250, 236, 255),
+        scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 164, 84, 255),
+          seedColor: const Color.fromARGB(255, 185, 213, 255),
         ),
       ),
-      home: Landingpage(),
+      home: landingpage(),
     );
   }
 }

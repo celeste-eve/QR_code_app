@@ -141,7 +141,7 @@ class _PageTwoState extends State<PageTwo> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Page Two'),
-        backgroundColor: const Color.fromARGB(255, 232, 216, 252),
+        backgroundColor: const Color.fromARGB(255, 185, 213, 255),
         actions: [
           IconButton(
             icon: Icon(Icons.help_outline),

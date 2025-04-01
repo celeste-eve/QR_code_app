@@ -117,7 +117,7 @@ class _PageOneState extends State<PageOne> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Page One'),
-        backgroundColor: const Color.fromARGB(255, 232, 216, 252),
+        backgroundColor: const Color.fromARGB(2255, 185, 213, 255),
         actions: [
           IconButton(
             icon: Icon(Icons.help_outline),
