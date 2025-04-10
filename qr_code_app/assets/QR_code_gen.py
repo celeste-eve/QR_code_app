@@ -47,15 +47,24 @@ def create_single_qr_pdf(data, output_path):
     add_qr_to_pdf([data], output_path)
     return output_path
 
-def create_multiple_qr_pdf(data_string, output_path):
+def create_multiple_qr_pdf(data_string, output_path=None):
     """Generate a PDF with multiple QR codes from comma-separated locations"""
     logger.info(f"Received data string: '{data_string}'")
     if not data_string or data_string.isspace():
         raise ValueError("Please add at least one location")
     
+    # Split the input string by commas and strip whitespace
     locations = [loc.strip() for loc in data_string.split(',') if loc.strip()]
     if not locations:
         raise ValueError("No valid locations provided")
+    
+    logger.info(f"Parsed locations: {locations}")
+    
+    # Use the first location to construct the file name if output_path is not provided
+    if not output_path:
+        sanitized_name = locations[0].replace(" ", "_").replace("/", "_")  # Replace spaces and slashes
+        output_path = f"{sanitized_name}_QR_code.pdf"
+        logger.info(f"Output path not provided. Using default: {output_path}")
     
     add_qr_to_pdf(locations, output_path)
     return output_path
@@ -81,7 +90,7 @@ def add_qr_to_pdf(strings, filename):
                 # Split the string into two parts and display them on separate lines
                 parts = s.split("PLT", 1)
                 c.drawString(x_position, 1.2 * inch, parts[0].strip())
-                c.drawString(x_position, 0.8 * inch, "PLT" + parts[1].strip())
+                c.drawString(x_position, 0.8 * inch, "PLT " + parts[1].strip())
             else:
                 c.drawString(x_position, 1.0 * inch, s)
             
@@ -106,17 +115,15 @@ if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser(description='Generate a PDF with multiple QR codes')
         parser.add_argument('--data', help='Data to encode in QR code(s). For multiple locations, separate with commas')
-        parser.add_argument('--output', help='Output file path')
+        parser.add_argument('--output', help='Output file path (optional)')
         
         args = parser.parse_args()
         logger.info(f"Received args: data='{args.data}', output='{args.output}'")
         
         if not args.data:
             raise ValueError("No data provided")
-        if not args.output:
-            raise ValueError("No output file path provided")
         
-        # Default to generating a PDF with multiple QR codes
+        # Generate the PDF with a dynamic or provided file name
         output_path = create_multiple_qr_pdf(args.data, args.output)
         print(output_path)  # Print the path so Flutter can capture it
 

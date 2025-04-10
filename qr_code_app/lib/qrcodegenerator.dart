@@ -186,12 +186,12 @@ class _qrcodesState extends State<qrcodes> {
           ),
         ],
       ),
-      body: Center(
+      body: Align(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(top: 40.0),
               child: Text(
                 'Select QR code type: ',
                 style: TextStyle(fontSize: 30),
@@ -207,7 +207,7 @@ class _qrcodesState extends State<qrcodes> {
                 });
               },
             ),
-            // enter location
+            // enter location bar
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
@@ -218,11 +218,24 @@ class _qrcodesState extends State<qrcodes> {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () => addEntry(_textController.text),
-              child: Text('Add Location', style: TextStyle(fontSize: 20)),
+
+            Padding(
+              // add location button
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                width: 550,
+                child: ElevatedButton(
+                  onPressed: () => addEntry(_textController.text),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text('Add Location', style: TextStyle(fontSize: 20)),
+                  ),
+                ),
+              ),
             ),
+
             Expanded(
+              // list of QR code locations
               child: ListView.builder(
                 itemCount: qrCodeEntries.length,
                 itemBuilder: (context, index) {
@@ -240,31 +253,60 @@ class _qrcodesState extends State<qrcodes> {
                 },
               ),
             ),
-            isLoading
-                ? CircularProgressIndicator()
-                : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ElevatedButton(
-                        onPressed: generateQRCodePdf,
-                        child: Text(
-                          'Generate QR code PDF',
-                          style: TextStyle(fontSize: 20),
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child:
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Container(
+                          width: 600,
+                          child: Row(
+                            // bottom row of buttons
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: 200,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: ElevatedButton(
+                                      onPressed: generateQRCodePdf,
+                                      child: Text(
+                                        'Generate QR code PDF',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  width: 200,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          qrCodeEntries.clear();
+                                        });
+                                      },
+                                      child: Text(
+                                        'Clear List',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          qrCodeEntries.clear();
-                        });
-                      },
-                      child: Text('Clear List', style: TextStyle(fontSize: 20)),
-                    ),
-                  ],
-                ),
+            ),
           ],
         ),
       ),

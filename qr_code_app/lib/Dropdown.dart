@@ -42,7 +42,12 @@ class _dropdownMState extends State<dropdownM> {
                 .map<DropdownMenuItem<String>>(
                   (QRcodetype item) => DropdownMenuItem<String>(
                     value: item.name,
-                    child: Center(child: Text(item.name)),
+                    child: Center(
+                      child: Text(
+                        item.name,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
                   ),
                 )
                 .toList(),
