@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:qr_code_app/dropdown.dart';
+import 'package:intl/intl.dart';
 
 class qrcodes extends StatefulWidget {
   @override
@@ -10,6 +11,10 @@ class qrcodes extends StatefulWidget {
 }
 
 String selectedQRCodeType = "Standard one line QR code"; // Default value
+
+// date and time
+final now = DateTime.now();
+final formattedDate = DateFormat('dd-MM-yyyy_HH-mm-ss').format(now);
 
 class _qrcodesState extends State<qrcodes> {
   final TextEditingController _textController = TextEditingController();
@@ -44,7 +49,7 @@ class _qrcodesState extends State<qrcodes> {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final outputPath = '${directory.path}/QRcodes.pdf';
+      final outputPath = '${directory.path}/QRcodes_$formattedDate.pdf';
 
       // Determine the script to execute based on the selected QR code type
       String scriptPath;
