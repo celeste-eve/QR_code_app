@@ -60,8 +60,11 @@ class _qrcodesState extends State<qrcodes> {
         case "Racking beam QR code":
           scriptPath = 'assets\\QR_code_Alternative.py';
           break;
+        case "Other QR code":
+          scriptPath = 'assets\\QR_code_defult.py';
+          break;
         default:
-          scriptPath = 'assets\\QR_code_gen.py';
+          scriptPath = 'assets\\QR_code_defult.py';
       }
 
       // Execute the selected Python script with the appropriate arguments

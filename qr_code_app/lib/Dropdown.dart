@@ -16,7 +16,7 @@ class dropdownM extends StatefulWidget {
 
 class _dropdownMState extends State<dropdownM> {
   final List<QRcodetype> items = [
-    QRcodetype("Standard one line QR code"),
+    QRcodetype("Other QR code"),
     QRcodetype("Pallet QR code"),
     QRcodetype("Racking beam QR code"),
   ];
@@ -55,7 +55,7 @@ class _dropdownMState extends State<dropdownM> {
           if (value != null) {
             setState(() {
               currentChoice = items.firstWhere((item) => item.name == value);
-              widget.onChanged(value); // Notify the parent widget
+              widget.onChanged(value);
             });
           }
         },
